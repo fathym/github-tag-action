@@ -13,6 +13,7 @@ initial_version=${INITIAL_VERSION:-0.0.0}
 tag_context=${TAG_CONTEXT:-repo}
 suffix=${PRERELEASE_SUFFIX:-beta}
 verbose=${VERBOSE:-true}
+force_tag=${FORCE_TAG:-false}
 
 cd ${GITHUB_WORKSPACE}/${source}
 
@@ -21,6 +22,7 @@ echo -e "\tDEFAULT_BUMP: ${default_semvar_bump}"
 echo -e "\tWITH_V: ${with_v}"
 echo -e "\tRELEASE_BRANCHES: ${release_branches}"
 echo -e "\tCUSTOM_TAG: ${custom_tag}"
+echo -e "\FORCE_TAG: ${force_tag}"
 echo -e "\tSOURCE: ${source}"
 echo -e "\tDRY_RUN: ${dryrun}"
 echo -e "\tINITIAL_VERSION: ${initial_version}"
@@ -76,11 +78,11 @@ tag_commit=$(git rev-list -n 1 $tag)
 # get current commit hash
 commit=$(git rev-parse HEAD)
 
-# if [ "$tag_commit" == "$commit" ]; then
-#     echo "No new commits since previous tag. Skipping..."
-#     echo ::set-output name=tag::$tag
-#     exit 0
-# fi
+if [ force_tag || "$tag_commit" == "$commit" ]; then
+    echo "No new commits since previous tag. Skipping..."
+    echo ::set-output name=tag::$tag
+    exit 0
+fi
 
 # echo log if verbose is wanted
 if $verbose
