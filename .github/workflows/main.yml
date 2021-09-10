@@ -5,12 +5,12 @@ on:
       - master
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: '0'
     - name: Bump version and push tag
       uses: fathym/github-tag-action@master
-      env:
+      env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
